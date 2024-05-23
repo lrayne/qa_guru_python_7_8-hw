@@ -21,15 +21,15 @@ def product():
 
 class TestProducts:
     def test_product_check_quantity(self, product):
-        assert product.check_quantity(1000) == True
-        assert product.check_quantity(999) == True
-        assert product.check_quantity(1001) == False
+        assert product.check_quantity(1000) is True
+        assert product.check_quantity(999) is True
+        assert product.check_quantity(1001) is False
 
     def test_product_buy(self, product):
-        expected_quanity = product.quantity - 1
+        expected_quantity = product.quantity - 1
         product.buy(1)
 
-        assert product.quantity == expected_quanity
+        assert product.quantity == expected_quantity
 
     def test_product_buy_more_than_available(self, product):
         with pytest.raises(ValueError):
@@ -83,11 +83,24 @@ class TestCart:
         pen = Product("pen", 200, "This is a pen", 3000)
         book = Product("book", 100, "This is a book", 1000)
 
-        cart.add_product(phone)
+        cart.add_product(phone, buy_count=10)
         cart.add_product(pen)
         cart.add_product(book)
 
-        assert cart.get_total_price() == 10300
+        assert cart.get_total_price() == 100300
+        assert phone.quantity == 1000
+
+    def test_buy_all_the_products(self, cart):
+        phone = Product("phone", 10000, "This is a phone", 1000)
+        pen = Product("pen", 200, "This is a pen", 3000)
+        book = Product("book", 100, "This is a book", 1000)
+
+        cart.add_product(phone, buy_count=10)
+        cart.add_product(pen)
+        cart.add_product(book)
+        cart.buy()
+
+        assert phone.quantity == 990
 
     def test_buy_product(self, product):
         expected_quantity = product.quantity - 1
@@ -102,6 +115,6 @@ class TestCart:
 
         assert product.quantity == expected_quantity
 
-    def test_buy__product_quantity_more_than_avalibale(self, product):
+    def test_buy__product_quantity_more_than_available(self, product):
         with pytest.raises(ValueError):
             assert product.buy(quantity=999999)

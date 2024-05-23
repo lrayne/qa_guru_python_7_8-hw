@@ -11,7 +11,7 @@ class Product:
         self.quantity = quantity
 
     def check_quantity(self, quantity) -> bool:
-        return True if self.quantity >= quantity else False
+        return self.quantity >= quantity
 
     def buy(self, quantity: int = 1) -> None:
         if self.check_quantity(quantity):
@@ -45,12 +45,12 @@ class Cart:
         self.products.clear()
 
     def get_total_price(self) -> float:
-        prices = [product.price for product in self.products.keys()]
-
+        prices = [product.price * count for product, count in self.products.items()]
         return sum(prices)
 
-    def buy(self, product: Product, buy_count: int = 1) -> None:
-        if product.quantity >= buy_count:
-            product.quantity -= buy_count
-        else:
-            raise ValueError
+    def buy(self) -> None:
+        for product, count in self.products.items():
+            if product.quantity >= count:
+                product.quantity -= count
+            else:
+                raise ValueError
