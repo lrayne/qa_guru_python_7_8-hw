@@ -38,47 +38,47 @@ class TestProducts:
 
 
 class TestCart:
-    def test_add_product_to_empty_cart(cart, product):
+    def test_add_product_to_empty_cart(self, cart, product):
         cart.add_product(product)
 
         assert product in cart.products
         assert cart.products[product] == 1
 
-    def test_add_same_product_to_not_empty_cart(cart, product):
+    def test_add_same_product_to_not_empty_cart(self, cart, product):
         cart.add_product(product)
         cart.add_product(product)
 
         assert product in cart.products
         assert cart.products[product] == 2
 
-    def test_add_product_quantity_to_empty_cart(cart, product):
+    def test_add_product_quantity_to_empty_cart(self, cart, product):
         quantity = 20
         cart.add_product(product, buy_count=quantity)
 
         assert product in cart.products
         assert cart.products[product] == quantity
 
-    def test_remove_product_from_cart(not_empty_cart, product):
+    def test_remove_product_from_cart(self, not_empty_cart, product):
         not_empty_cart.remove_product(product)
 
         assert not_empty_cart.products == {}
 
-    def test_remove_product_count_from_cart(not_empty_cart, product):
+    def test_remove_product_count_from_cart(self, not_empty_cart, product):
         not_empty_cart.products[product] = 10
         not_empty_cart.remove_product(product, remove_count=5)
 
         assert not_empty_cart.products[product] == 5
 
-    def test_remove_more_products_then_in_cart(not_empty_cart, product):
+    def test_remove_more_products_then_in_cart(self, not_empty_cart, product):
         not_empty_cart.remove_product(product, remove_count=100)
 
         assert not_empty_cart.products == {}
 
-    def test_clear_cart(not_empty_cart):
+    def test_clear_cart(self, not_empty_cart):
         not_empty_cart.clear()
         assert not_empty_cart.products == {}
 
-    def test_get_total_price(cart):
+    def test_get_total_price(self, cart):
         phone = Product("phone", 10000, "This is a phone", 1000)
         pen = Product("pen", 200, "This is a pen", 3000)
         book = Product("book", 100, "This is a book", 1000)
@@ -89,19 +89,19 @@ class TestCart:
 
         assert cart.get_total_price() == 10300
 
-    def test_buy_product(product):
+    def test_buy_product(self, product):
         expected_quantity = product.quantity - 1
         product.buy()
 
         assert product.quantity == expected_quantity
 
-    def test_buy_current_product_quantity(product):
+    def test_buy_current_product_quantity(self, product):
         quantity = 100
         expected_quantity = product.quantity - quantity
         product.buy(quantity=100)
 
         assert product.quantity == expected_quantity
 
-    def test_buy__product_quantity_more_than_avalibale(product):
+    def test_buy__product_quantity_more_than_avalibale(self, product):
         with pytest.raises(ValueError):
             assert product.buy(quantity=999999)
