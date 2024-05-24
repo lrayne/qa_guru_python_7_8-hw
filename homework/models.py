@@ -17,7 +17,7 @@ class Product:
         if self.check_quantity(quantity):
             self.quantity -= quantity
         else:
-            raise ValueError
+            raise ValueError('Not enough on stock')
 
     def __hash__(self):
         return hash(self.name + self.description)
@@ -49,8 +49,8 @@ class Cart:
         return sum(prices)
 
     def buy(self) -> None:
-        for product, count in self.products.items():
-            if product.quantity >= count:
-                product.quantity -= count
+        for product, quantity in self.products.items():
+            if product.check_quantity(quantity):
+                product.buy(quantity)
             else:
-                raise ValueError
+                raise ValueError('Not enough on stock')
